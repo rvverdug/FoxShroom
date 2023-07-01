@@ -15,7 +15,7 @@ public class GameOver : MonoBehaviour
 
     //restart button redirects user to first game level and automatically plays game
     public void RestartButton() {
-        SceneManager.LoadScene("Scene1");
+        SceneManager.LoadScene("Level1");
     }
 
     //exit button redirects user to main menu on start screen 
