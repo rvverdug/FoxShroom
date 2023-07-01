@@ -13,10 +13,12 @@ public class GameOver : MonoBehaviour
         pointsText.text = score.ToString() + " POINTS";
     }
 
+    //restart button redirects user to first game level and automatically plays game
     public void RestartButton() {
         SceneManager.LoadScene("Scene1");
     }
 
+    //exit button redirects user to main menu on start screen 
     public void ExitButton() {
         SceneManager.LoadScene("StartScreen");
     }
