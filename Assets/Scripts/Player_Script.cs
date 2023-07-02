@@ -111,24 +111,8 @@ public class Player_Script : MonoBehaviour
     {
         _score += 1;
         _uiManager.scoreText(_score);
+        _uiManager.sceneChange(_score, _alive);
 
-        //in the first level the player has to collect 15 mushrooms to move to the next level 
-        if (_scene.name == "Level1")
-        {
-            if (_score == 15)
-            {
-                _uiManager.sceneChange(_alive);
-            }
-    
-        }
-        //in the second level the player has to collect 20 mushrooms to win 
-        if (_scene.name == "Level2")
-        {
-            if (_score == 20)
-            {
-                _uiManager.sceneChange(_alive);
-            }
-        }
         
     }
 
@@ -140,7 +124,7 @@ public class Player_Script : MonoBehaviour
         if (_lives == 0)
         {
             _alive = false;
-            _uiManager.sceneChange(_alive);
+            _uiManager.sceneChange(_score, _alive);
         }
     }
     

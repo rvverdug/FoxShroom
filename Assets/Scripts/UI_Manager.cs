@@ -24,17 +24,17 @@ public class UI_Manager : MonoBehaviour
         _livestext.text = "Lives: " + _lives;
     }
 
-    public void sceneChange(bool _alive)
+    public void sceneChange(int _score, bool _alive)
     {
         Scene scene = SceneManager.GetActiveScene();
         //if the player is still alive, the game goes on or they have won
         if (_alive == true)
         {
-            if (scene.name == "Level1")
+            if (scene.name == "Level1" && _score == 15)
             {
-                SceneManager.LoadScene("Level2");
+                SceneManager.LoadScene("Explanation2");
             }
-            if (scene.name == "Level2")
+            if (scene.name == "Level2" && _score == 20)
             {
                 SceneManager.LoadScene("WinningScreen");
             }
