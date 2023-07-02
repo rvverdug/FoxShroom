@@ -23,7 +23,7 @@ public class Spider_Manager : MonoBehaviour
         }
         if (scene.name == "Level2")
         {
-            _instances = 10;
+            _instances = 8;
         }
 
     }
