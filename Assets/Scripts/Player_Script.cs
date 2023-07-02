@@ -3,14 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player_Script : MonoBehaviour
 {
-    [SerializeField]
-    private Animator _animator = new Animator();
-
     [SerializeField] 
     private Rigidbody RB;
+    
+    private Animator _animator;
+    private Scene _scene; 
 
     [SerializeField] 
     private float _speed = 5f;
@@ -21,43 +22,66 @@ public class Player_Script : MonoBehaviour
     
     [SerializeField]
     private UI_Manager _uiManager;
+    
+    
 
     
-    // Start is called before the first frame update
+
     void Start()
     {
+        _animator = GetComponent<Animator>();
+        _scene = SceneManager.GetActiveScene();
         // START POSITION 
-        transform.position = new Vector3(0f, 0f, 20f);
+        transform.position = new Vector3(0f, 0f, 25f);
+
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         Move();
         
     }
 
+    //The player can move forward, backward, left and right (including animations)
     private void Move()
     {
         if (Input.GetKey("up"))
         {
             
             RB.MovePosition(transform.position + new Vector3(0f,0f,5f) * Time.deltaTime * _speed);
+            _animator.SetBool("_back", false);
+            _animator.SetBool("_left", false);
+            _animator.SetBool("_right", false);
+            _animator.SetBool("_front", true);
         }
         if (Input.GetKey("down"))
         {
             RB.MovePosition(transform.position + new Vector3(0f,0f,-5f) * Time.deltaTime * _speed);
+            _animator.SetBool("_front", false);
+            _animator.SetBool("_left", false);
+            _animator.SetBool("_right", false);
+            _animator.SetBool("_back", true);
         }
         if (Input.GetKey("left"))
         {
             RB.MovePosition(transform.position + new Vector3(-5f,0f,0f) * Time.deltaTime * _speed);
+            _animator.SetBool("_front", false);
+            _animator.SetBool("_back", false);
+            _animator.SetBool("_right", false);
+            _animator.SetBool("_left", true);
         }
         if (Input.GetKey("right"))
         {
             RB.MovePosition(transform.position + new Vector3(5f,0f,0f) * Time.deltaTime * _speed);
+            _animator.SetBool("_front", false);
+            _animator.SetBool("_back", false);
+            _animator.SetBool("_left", false);
+            _animator.SetBool("_right", true);
         }
 
 
+        // the player has boundaries, they cannot move out of 
         if (transform.position.x <= -380f)
         {
             transform.position = new Vector3(-375f, 0, transform.position.z);
@@ -66,9 +90,9 @@ public class Player_Script : MonoBehaviour
         {
             transform.position = new Vector3(375f, 0, transform.position.z);
         }
-        if (transform.position.z <= 10f)
+        if (transform.position.z <= 25f)
         {
-            transform.position = new Vector3(transform.position.x, 0, 15f);
+            transform.position = new Vector3(transform.position.x, 0, 30f);
         }
         if (transform.position.z >= 800f)
         {
@@ -82,12 +106,33 @@ public class Player_Script : MonoBehaviour
     }
     
 
+    //when the player collects a mushroom, their score goes up
     public void scoreUpdate()
     {
         _score += 1;
         _uiManager.scoreText(_score);
+
+        //in the first level the player has to collect 15 mushrooms to move to the next level 
+        if (_scene.name == "Level1")
+        {
+            if (_score == 15)
+            {
+                _uiManager.sceneChange(_alive);
+            }
+    
+        }
+        //in the second level the player has to collect 20 mushrooms to win 
+        if (_scene.name == "Level2")
+        {
+            if (_score == 20)
+            {
+                _uiManager.sceneChange(_alive);
+            }
+        }
+        
     }
 
+    //when the player gets attacked by a spider, they lose a life; if they have no lives left, the game is over
     public void takeDamage()
     {
         _lives -= 1;
@@ -95,6 +140,7 @@ public class Player_Script : MonoBehaviour
         if (_lives == 0)
         {
             _alive = false;
+            _uiManager.sceneChange(_alive);
         }
     }
     
